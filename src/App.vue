@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <HelloWorld></HelloWorld>
+    <ChatRoom></ChatRoom>
   </div>
 </template>
 <script>
-import HelloWorld from "./views/HelloWorld.vue";
+import ChatRoom from "./views/ChatRoom.vue";
 export default {
   components: {
-    HelloWorld
+    ChatRoom
   }
 };
 </script>

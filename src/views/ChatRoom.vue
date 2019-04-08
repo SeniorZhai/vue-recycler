@@ -4,12 +4,12 @@
       <div class="container-inner">
         <virtual-stream
           :items="reversedItems"
-          :count="120"
-          :offset="80"
+          :count="20"
+          :offset="2"
           ref="stream"
-          attachToStart
           reversed
           reverseItems
+          attachToStart
         >
           <template slot-scope="{ item, index }">
             <div v-on:click="updateMessage(item, index)">
@@ -20,7 +20,7 @@
       </div>
       <div class="toolbar">
         <div>
-          <input type="text">
+          <input type="text" v-model="message">
           <button v-on:click="addMessage">Add message</button>
           <br>
         </div>
@@ -55,7 +55,8 @@ export default {
   },
   data() {
     return {
-      items: this.generateMessages(300)
+      items: this.generateMessages(300),
+      message: ""
     };
   },
   computed: {
@@ -66,7 +67,6 @@ export default {
   },
   methods: {
     generateMessage: function(id) {
-      console.log(LoremIpsum);
       const isRight = Math.floor(Math.random() * 10) > 7;
       const hasAttachment = Math.floor(Math.random() * 20) > 16;
       return {
@@ -89,7 +89,13 @@ export default {
     addMessage: function() {
       const newItems = [...this.items];
       newItems.push(this.generateMessage(this.items.length));
+
       this.items = newItems;
+      // try {
+      //   console.log(this.message);
+      //   let index = parseInt(this.message);
+      //   this.$refs.stream.scrollTo(index);
+      // } catch (error) {}
     },
     updateMessage: function(item, index) {
       const newItems = [...this.items];
@@ -137,15 +143,7 @@ body {
   flex-direction: column;
   height: 100%;
 }
-.app >>> .VirtualStream__Items {
-  position: relative;
-}
-.app >>> .VirtualStream__Items--isPrev:before {
-  transform: translateY(32px);
-}
-.app >>> .VirtualStream__Items--isNext:before {
-  transform: traslateY(-32px);
-}
+
 .container {
   background: #fff;
   border-radius: 12px;
@@ -177,9 +175,7 @@ body {
   grid-template-columns: repeat(3, minmax(100px, 1fr));
   grid-gap: 16px;
 }
-</style>
 
-<style>
 *,
 *:before,
 *:after {

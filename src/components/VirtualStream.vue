@@ -31,8 +31,17 @@
 </template>
 
 <script>
+// throttle(func, [wait=0], [options])
+// 创建一个节流函数，在wait秒内最多执行func一次，提供一个cancel方法取消延迟函数的调用 flush立即调用
+// options.leading | options.trailing 决定wait前后如何触发
 import throttle from "lodash/throttle";
+// debounce(func, [wait=0], [options])
+// 防抖动函数，该函数会在wait毫秒后调用func方法，提供一个cancel方法取消函数调用 flush方法立即调用
+// options.leading=false 指定调用在延迟前
+// options.maxWait 最大延迟
+// options.trailing=true 调用在延迟结束后
 import debounce from "lodash/debounce";
+// 返回两个对象的区别
 import diff from "deep-object-diff/dist/diff";
 import Item from "./Item.vue";
 let locked = false;
@@ -42,10 +51,12 @@ export default {
     Item
   },
   props: {
+    // 需要显示的数据 每一项必须有一个唯一标识的id
     items: {
       type: Array,
       required: true
     },
+    // 数据显示是否翻转
     reversed: {
       type: Boolean,
       default: false
@@ -54,18 +65,22 @@ export default {
       type: Boolean,
       default: false
     },
+    // 列表存在是item数量
     count: {
       type: Number,
       default: 40
     },
+    // 触发生成新项的偏移量
     offset: {
       type: Number,
       default: 5
     },
+    // 是否处理调整大小
     watchResizes: {
       type: Boolean,
       default: true
     },
+    // 列表滚动到新增项目
     attachToStart: {
       type: Boolean,
       default: false
@@ -77,12 +92,12 @@ export default {
   },
   data() {
     return {
-      currentView: [],
+      currentView: [], // 虚拟列表内显示的item
       identifier: {
-        ids: {},
-        indexes: []
+        ids: {}, // 所有项的id、index对应的关系
+        indexes: [] // 所有项的id
       },
-      position: 0,
+      position: 0, // 将要显示的item 的index
       oldPosition: 0,
       oldScrollTop: 0,
       dimensions: {},
@@ -180,6 +195,8 @@ export default {
      */
     updatePositionFromUnknownScrollPosition(positions) {
       const dimensions = Object.values(this.dimensions);
+      console.log(positions);
+      console.log(dimensions);
       let currentPosition = [];
       for (let i = 0; i < dimensions.length; i++) {
         const dimension = dimensions[i];
@@ -459,7 +476,7 @@ export default {
         this.identifier = this.getUpdatedIdentifiers(itemDiff);
       }
     },
-    currentView(n) {
+    currentView(n, o) {
       this.$nextTick(() => {
         this.updateItemDimensions();
         this.$nextTick(() => {
